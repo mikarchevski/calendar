@@ -1,37 +1,4 @@
-﻿name: Build and Release
-
-on:
-  push:
-    tags:
-      - 'v*'
-
-jobs:
-  build:
-    runs-on: windows-latest
-    
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: '9.0.x'
-
-    - name: Restore dependencies
-      run: dotnet restore
-
-    - name: Build
-      run: dotnet build --configuration Release --no-restore
-
-    - name: Publish
-      run: dotnet publish --configuration Release --no-build --output ./publish
-      
-    - name: Install NSIS
-      run: choco install nsis -y
-      shell: pwsh
-
-    - name: Build NSIS installer
+﻿    - name: Build NSIS installer
       run: |
         & "C:\Program Files (x86)\NSIS\makensis.exe" installer.nsi
       shell: pwsh
@@ -44,12 +11,12 @@ jobs:
     - name: Upload release asset
       uses: softprops/action-gh-release@v2
       with:
-        files: MacCalendar-Setup.exe
-        name: MacCalendar ${{ env.VERSION }}
+        files: Calendar-Setup.exe
+        name: Calendar ${{ env.VERSION }}
         body: |
-          ## Calendar ${{ env.VERSION }}
+          ## 📦 Calendar ${{ env.VERSION }}
           
-          Нативный десктопный календарь для Windows в стиле macOS.
+          Нативный десктопный календарь для Windows.
           
           ### Установка:
           1. Скачай `Calendar-Setup.exe`

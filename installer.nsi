@@ -1,20 +1,16 @@
 ﻿!include "MUI2.nsh"
-!include "FileFunc.nsh"
 
 ; Основные настройки
-Name "MacCalendar"
-OutFile "MacCalendar-Setup.exe"
-InstallDir "$PROGRAMFILES\MacCalendar"
-InstallDirRegKey HKLM "Software\MacCalendar" "InstallDir"
+Name "Calendar"
+OutFile "Calendar-Setup.exe"
+InstallDir "$PROGRAMFILES\Calendar"
+InstallDirRegKey HKLM "Software\Calendar" "InstallDir"
 RequestExecutionLevel admin
 
 ; Настройки интерфейса
 !define MUI_ABORTWARNING
 !define MUI_ICON "Assets\app.ico"
 !define MUI_UNICON "Assets\app.ico"
-!define MUI_HEADERIMAGE
-!define MUI_HEADERIMAGE_BITMAP "Assets\app.ico"
-!define MUI_WELCOMEFINISHPAGE_BITMAP "Assets\app.ico"
 
 ; Страницы установщика
 !insertmacro MUI_PAGE_WELCOME
@@ -31,41 +27,34 @@ RequestExecutionLevel admin
 ; Язык
 !insertmacro MUI_LANGUAGE "English"
 
-; Размер устанавливаемых файлов
-!insertmacro GetSize "$INSTDIR" "/S=0K" $0 $1 $2
-
-Section "MacCalendar" SecMain
+Section "Calendar" SecMain
     SetOutPath "$INSTDIR"
     
     ; Копируем все файлы из папки publish
     File /r "publish\*.*"
     
     ; Создаём ярлык на рабочем столе
-    CreateShortCut "$DESKTOP\MacCalendar.lnk" "$INSTDIR\MacCalendar.exe"
+    CreateShortCut "$DESKTOP\Calendar.lnk" "$INSTDIR\Calendar.exe"
     
     ; Создаём ярлык в меню Пуск
-    CreateDirectory "$SMPROGRAMS\MacCalendar"
-    CreateShortCut "$SMPROGRAMS\MacCalendar\MacCalendar.lnk" "$INSTDIR\MacCalendar.exe"
-    CreateShortCut "$SMPROGRAMS\MacCalendar\Uninstall.lnk" "$INSTDIR\uninst.exe"
+    CreateDirectory "$SMPROGRAMS\Calendar"
+    CreateShortCut "$SMPROGRAMS\Calendar\Calendar.lnk" "$INSTDIR\Calendar.exe"
+    CreateShortCut "$SMPROGRAMS\Calendar\Uninstall.lnk" "$INSTDIR\uninst.exe"
     
     ; Записываем путь установки в реестр
-    WriteRegStr HKLM "Software\MacCalendar" "InstallDir" "$INSTDIR"
+    WriteRegStr HKLM "Software\Calendar" "InstallDir" "$INSTDIR"
     
     ; Записываем информацию для "Установка и удаление программ"
-    WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\MacCalendar" \
-        "DisplayName" "MacCalendar"
-    WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\MacCalendar" \
+    WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Calendar" \
+        "DisplayName" "Calendar"
+    WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Calendar" \
         "UninstallString" "$INSTDIR\uninst.exe"
-    WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\MacCalendar" \
-        "DisplayIcon" "$INSTDIR\MacCalendar.exe"
-    WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\MacCalendar" \
+    WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Calendar" \
+        "DisplayIcon" "$INSTDIR\Calendar.exe"
+    WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Calendar" \
         "Publisher" "mikarchevski"
-    WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\MacCalendar" \
-        "DisplayVersion" "1.1.0"
-    ${GetSize} "$INSTDIR" "/S=0K" $0 $1 $2
-    IntFmt $0 "0x%08X" $0
-    WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\MacCalendar" \
-        "EstimatedSize" "$0"
+    WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Calendar" \
+        "DisplayVersion" "1.2.1"
     
     ; Создаём деинсталлятор
     WriteUninstaller "$INSTDIR\uninst.exe"
@@ -76,10 +65,10 @@ Section "Uninstall"
     RMDir /r "$INSTDIR"
     
     ; Удаляем ярлыки
-    Delete "$DESKTOP\MacCalendar.lnk"
-    RMDir /r "$SMPROGRAMS\MacCalendar"
+    Delete "$DESKTOP\Calendar.lnk"
+    RMDir /r "$SMPROGRAMS\Calendar"
     
     ; Удаляем записи реестра
-    DeleteRegKey HKLM "Software\MacCalendar"
-    DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\MacCalendar"
+    DeleteRegKey HKLM "Software\Calendar"
+    DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Calendar"
 SectionEnd
