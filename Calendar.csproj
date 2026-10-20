@@ -22,4 +22,12 @@
     </Content>
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="Assets\app.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\app.ico" />
+  </ItemGroup>
+
 </Project>
