@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MacCalendar</title>
+    <link rel="stylesheet" href="styles.css?v=15">
+</head>
+<body>
+    <div class="app">
+        <!-- Левая панель -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>Календари</h2>
+            </div>
+            <div class="calendars-list" id="calendarsList">
+                <!-- Заполняется из JS -->
+            </div>
+            <div class="mini-calendar">
+                <div class="mini-cal-header">
+                    <button id="miniPrev">‹</button>
+                    <span id="miniMonthYear"></span>
+                    <button id="miniNext">›</button>
+                </div>
+                <div class="mini-cal-grid" id="miniCalGrid"></div>
+            </div>
+            <label class="theme-toggle" for="themeToggle">
+                <span>Тёмная тема</span>
+                <input type="checkbox" id="themeToggle" role="switch" aria-label="Тёмная тема">
+                <span class="theme-toggle-track" aria-hidden="true"></span>
+            </label>
+        </aside>
+
+        <!-- Основная область -->
+        <main class="main">
+            <header class="toolbar">
+                <div class="toolbar-left">
+                    <button class="btn-today" id="btnToday">Сегодня</button>
+                    <div class="nav-arrows">
+                        <button id="prevPeriod">‹</button>
+                        <button id="nextPeriod">›</button>
+                    </div>
+                    <h1 id="currentPeriodTitle">Апрель 2025</h1>
+                </div>
+                <div class="view-switcher">
+                    <button class="view-btn" data-view="day">День</button>
+                    <button class="view-btn active" data-view="workweek">Рабочая неделя</button>
+                    <button class="view-btn" data-view="week">Неделя</button>
+                    <button class="view-btn" data-view="month">Месяц</button>
+                    <button class="view-btn" data-view="year">Год</button>
+                </div>
+            </header>
+
+            <div class="calendar-body" id="calendarBody">
+                <!-- Заполняется из JS -->
+            </div>
+        </main>
+    </div>
+
+    <!-- Модалка создания/редактирования события -->
+    <div class="modal" id="eventModal">
+        <div class="modal-content">
+            <h3 id="modalTitle">Новое событие</h3>
+            <button type="button" class="modal-close" id="btnCloseModal" aria-label="Закрыть">×</button>
+            <input type="text" id="eventTitle" placeholder="Название">
+            <div class="datetime-row date-row">
+                <div>
+                    <label>Начало</label>
+                    <div class="date-picker">
+                        <input type="text" id="eventStartDate" placeholder="дд.мм.гггг" inputmode="numeric" autocomplete="off" required>
+                        <button type="button" class="date-picker-button" aria-label="Выбрать дату начала">
+                            <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M6 2v3m8-3v3M3.5 7h13M4 4.5h12a1.5 1.5 0 0 1 1.5 1.5v10A1.5 1.5 0 0 1 16 17.5H4A1.5 1.5 0 0 1 2.5 16V6A1.5 1.5 0 0 1 4 4.5Z" /></svg>
+                        </button>
+                        <input type="date" class="native-date-picker" id="eventStartNativeDate" tabindex="-1" aria-hidden="true">
+                    </div>
+                </div>
+                <div>
+                    <label>Окончание</label>
+                    <div class="date-picker">
+                        <input type="text" id="eventEndDate" placeholder="дд.мм.гггг" inputmode="numeric" autocomplete="off" required>
+                        <button type="button" class="date-picker-button" aria-label="Выбрать дату окончания">
+                            <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M6 2v3m8-3v3M3.5 7h13M4 4.5h12a1.5 1.5 0 0 1 1.5 1.5v10A1.5 1.5 0 0 1 16 17.5H4A1.5 1.5 0 0 1 2.5 16V6A1.5 1.5 0 0 1 4 4.5Z" /></svg>
+                        </button>
+                        <input type="date" class="native-date-picker" id="eventEndNativeDate" tabindex="-1" aria-hidden="true">
+                    </div>
+                </div>
+            </div>
+            <div class="datetime-row time-row">
+                <div class="time-picker">
+                    <select id="eventStartHour" aria-label="Час начала" required></select>
+                    <span>:</span>
+                    <select id="eventStartMinute" aria-label="Минута начала" required></select>
+                </div>
+                <div class="time-picker">
+                    <select id="eventEndHour" aria-label="Час окончания" required></select>
+                    <span>:</span>
+                    <select id="eventEndMinute" aria-label="Минута окончания" required></select>
+                </div>
+            </div>
+            <label class="all-day-toggle">
+                <input type="checkbox" id="eventAllDay">
+                <span>Весь день</span>
+            </label>
+            <label>Календарь</label>
+            <select id="eventCalendar"></select>
+            <textarea id="eventDesc" rows="6" placeholder="Описание"></textarea>
+            <div class="modal-actions">
+                <button class="btn-delete" id="btnDelete" style="display:none">Удалить</button>
+                <div class="right-actions">
+                    <button class="btn-cancel" id="btnCancel">Отмена</button>
+                    <button class="btn-save" id="btnSave">Сохранить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js?v=20"></script>
+</body>
+</html>

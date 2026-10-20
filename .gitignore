@@ -1,0 +1,83 @@
+# ==========================================
+# .NET / WPF
+# ==========================================
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+# Build results
+*.dll
+*.exe
+*.pdb
+*.netmodule
+*.ilk
+*.metagen
+*.xml
+*.manifest
+*.aps
+*.pch
+*.vspscc
+*_i.c
+*_p.c
+*.ncb
+*.suo
+*.tlb
+*.tlh
+*.bak
+*.cache
+*.log
+*.state
+*.tmp
+*.dotCover
+*.coverage
+*.coveragexml
+
+# ==========================================
+# Visual Studio / IDE
+# ==========================================
+.vs/
+*.user
+*.userosscache
+*.sln.docstates
+*.vssscc
+*.csproj.user
+.idea/
+.vscode/
+
+# Игнорируем любые локальные SQLite файлы, чтобы не коммитить тестовые данные
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+
+# ==========================================
+# Веб-файлы и пакеты (на всякий случай)
+# ==========================================
+node_modules/
+npm-debug.log
+yarn-error.log
+*.log
+
+# ==========================================
+# Операционная система
+# ==========================================
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+.DS_Store
+.AppleDouble
+.LSOverride
+
+!wwwroot/
+!wwwroot/**/*
