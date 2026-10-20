@@ -12,6 +12,7 @@ bld/
 [Oo]bj/
 [Ll]og/
 [Ll]ogs/
+publish/
 
 # Build results
 *.dll

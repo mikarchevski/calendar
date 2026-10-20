@@ -26,11 +26,9 @@ jobs:
 
     - name: Publish
       run: dotnet publish --configuration Release --no-build --output ./publish
-
+      
     - name: Install NSIS
-      run: |
-        Invoke-WebRequest -Uri "https://github.com/nicehash/NiceHashQuickMiner/releases/download/v1.0.0.0/nsis-3.08-setup.exe" -OutFile nsis-setup.exe
-        Start-Process nsis-setup.exe -ArgumentList "/S" -Wait
+      run: choco install nsis -y
       shell: pwsh
 
     - name: Build NSIS installer
@@ -49,19 +47,17 @@ jobs:
         files: MacCalendar-Setup.exe
         name: MacCalendar ${{ env.VERSION }}
         body: |
-          ## 📦 MacCalendar ${{ env.VERSION }}
+          ## Calendar ${{ env.VERSION }}
           
           Нативный десктопный календарь для Windows в стиле macOS.
           
           ### Установка:
-          1. Скачай `MacCalendar-Setup.exe`
+          1. Скачай `Calendar-Setup.exe`
           2. Запусти установщик
           3. Следуй инструкциям
           
           ### Требования:
           - Windows 10 (1803+) или Windows 11
           - Microsoft Edge WebView2 Runtime (обычно уже установлен)
-          
-          Если WebView2 не установлен — приложение предложит его скачать.
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
