@@ -1,4 +1,4 @@
-﻿name: Build and Release
+name: Build and Release
 
 on:
   push:
@@ -6,11 +6,13 @@ on:
       - 'v*'
 
 jobs:
-  release:
-    runs-on: windows-latest
-  build:
+  build-and-release: # Combined into one job, removed the empty 'release' job
     runs-on: windows-latest
     
+    # ✅ FIX 1: Add permissions to resolve the 403 Forbidden error
+    permissions:
+      contents: write
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
@@ -36,6 +38,17 @@ jobs:
     - name: Build NSIS installer
       run: |
         & "C:\Program Files (x86)\NSIS\makensis.exe" installer.nsi
+      shell: pwsh
+
+    # ✅ FIX 2: Verify the installer was actually generated in the root folder
+    - name: Debug - Verify Installer Exists
+      run: |
+        if (Test-Path "Calendar-Setup.exe") { 
+          Write-Host "✅ Installer found!" 
+        } else { 
+          Write-Host "❌ Installer NOT found! Listing directory:"
+          Get-ChildItem 
+        }
       shell: pwsh
 
     - name: Get version from tag
