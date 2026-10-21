@@ -27,10 +27,25 @@ public partial class MainWindow : Window
     }
     private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
     {
-        var env = await CoreWebView2Environment.CreateAsync();
+        // 1. Определяем безопасную папку для данных WebView2 (в AppData пользователя)
+        string appDataPath = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+            "Calendar");
+
+        // 2. Создаем её, если она еще не существует
+        if (!Directory.Exists(appDataPath))
+        {
+            Directory.CreateDirectory(appDataPath);
+        }
+
+        // 3. Передаем этот путь вторым аргументом в CreateAsync
+        // Первый аргумент (browserExecutableFolder) оставляем null, чтобы использовался системный Edge
+        var env = await CoreWebView2Environment.CreateAsync(null, appDataPath);
+
         await webView.EnsureCoreWebView2Async(env);
 
         var wwwrootPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "wwwroot");
+
         webView.CoreWebView2.SetVirtualHostNameToFolderMapping(
             "app.local",
             wwwrootPath,
@@ -41,21 +56,17 @@ public partial class MainWindow : Window
         webView.CoreWebView2.Settings.IsStatusBarEnabled = false;
 
         webView.CoreWebView2.WebMessageReceived += OnWebMessageReceived;
+        System.Diagnostics.Debug.WriteLine("[C#] Подписка установлена");
+
+        _reminderService.Start();
+
         webView.Source = new Uri("https://app.local/index.html");
 
         webView.CoreWebView2.NavigationCompleted += (s, args) =>
         {
+            System.Diagnostics.Debug.WriteLine("[C#] Страница загружена");
             SendInitialDataToJs();
         };
-
-        // 1. Инициализация трей-иконки
-        _trayIcon = (TaskbarIcon)FindResource("TrayIcon");
-
-        // 2. Включаем автозагрузку (можно вынести в настройки позже)
-        AutoStartManager.SetAutoStart(true);
-
-        // 3. Запускаем сервис уведомлений
-        _reminderService.Start();
     }
 
     // Перехватываем закрытие окна: вместо закрытия просто скрываем его

@@ -10,7 +10,7 @@ public static class CalendarDb
 {
     private static string DbPath => Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-        "MacCalendar", "calendar.db");
+        "Calendar", "calendar.db");
 
     public static void Initialize()
     {

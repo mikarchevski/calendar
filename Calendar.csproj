@@ -8,7 +8,7 @@
 		<UseWPF>true</UseWPF>
 		<TargetPlatformVersion>10.0.19041.0</TargetPlatformVersion>
 		<ApplicationIcon>Assets\app.ico</ApplicationIcon>
-		<AssemblyName>MacCalendar</AssemblyName>
+		<AssemblyName>Calendar</AssemblyName>
 		<RootNamespace>Calendar</RootNamespace>
 	</PropertyGroup>
 

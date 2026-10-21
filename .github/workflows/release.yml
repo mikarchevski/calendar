@@ -3,61 +3,49 @@
 on:
   push:
     tags:
-      - 'v*'
+      - 'v*' # Запускается при создании тега, например, v1.1.4
+
+# 🔑 ВАЖНО: Даем токену права на создание релизов и загрузку артефактов
+permissions:
+  contents: write
 
 jobs:
-  build:
-    runs-on: windows-latest
-    
+  build-and-release:
+    runs-on: windows-latest # Inno Setup работает только на Windows
+
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: '9.0.x'
+      - name: Setup .NET 9
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
 
-    - name: Restore dependencies
-      run: dotnet restore
+      - name: Restore dependencies
+        run: dotnet restore
 
-    - name: Build
-      run: dotnet build --configuration Release --no-restore
+      - name: Publish .NET App
+        # Собираем приложение так, как мы делали это локально
+        run: dotnet publish -c Release -r win-x64 --self-contained true -p:PublishSingleFile=false
 
-    - name: Publish
-      run: dotnet publish --configuration Release --no-build --output ./publish
-      
-    - name: Install NSIS
-      run: choco install nsis -y
-      shell: pwsh
+      - name: Install Inno Setup
+        # Устанавливаем Inno Setup через пакетный менеджер Windows
+        run: choco install innosetup -y
 
-    - name: Build NSIS installer
-      run: |
-        & "C:\Program Files (x86)\NSIS\makensis.exe" installer.nsi
-      shell: pwsh
+      - name: Build Installer
+        # Компилируем установщик. Убедитесь, что installer.iss лежит в корне репозитория!
+        run: |
+          & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" "installer.iss"
 
-    - name: Get version from tag
-      id: get_version
-      run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
-      shell: bash
-
-    - name: Upload release asset
-      uses: softprops/action-gh-release@v2
-      with:
-        files: MacCalendar-Setup.exe
-        name: MacCalendar ${{ env.VERSION }}
-        body: |
-          ## Calendar ${{ env.VERSION }}
-          
-          Нативный десктопный календарь для Windows.
-          
-          ### Установка:
-          1. Скачай `Calendar-Setup.exe`
-          2. Запусти установщик
-          3. Следуй инструкциям
-          
-          ### Требования:
-          - Windows 10 (1803+) или Windows 11
-          - Microsoft Edge WebView2 Runtime (обычно уже установлен)
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          # 🔑 ВАЖНО: Имя файла должно ТОЧНО совпадать с OutputBaseFilename в installer.iss + .exe
+          # Если в installer.iss у вас OutputBaseFilename=Calendar_Setup, то пишем Calendar_Setup.exe
+          files: InstallerOutput/Calendar_Setup.exe 
+          name: Release ${{ github.ref_name }}
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
